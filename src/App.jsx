@@ -1,14 +1,15 @@
-import { auth } from './firebase/firebase';
+import Login from './pages/Login';
+import Register from './pages/Register';
+
 
 function App() {
 
-    console.log('Firebase Auth:', auth);
-
     return (
-        <div>
-            <h1>Quid Pro Quo</h1>
-        </div>
+        <Login></Login>
+        // <Register></Register>
+        
     );
+
 }
 
 export default App;
