@@ -1,40 +1,52 @@
 import React, { useContext } from 'react';
-import { signOut } from 'firebase/auth';
 
-import { auth } from '../firebase/firebase';
 import { AuthContext } from '../context/AuthContext';
+
+import { authenticatedFetch } from '../api/api';
 
 //=========================Dashboard Component=========================
 
 const Dashboard = () => {
-    const handleLogout = async () => {
+
+    const { user } = useContext(AuthContext);
+
+    const handleTestBackend = async () => {
 
         try {
 
-            await signOut(auth);
+            const response = await authenticatedFetch(
+                user,
+                '/protected'
+            );
+
+            const data = await response.json();
+
+            console.log('Backend Response:', data);
 
         } catch (error) {
 
-            console.error('Logout failed:', error);
+            console.error('Backend request failed:', error);
 
         }
 
     };
-    const { user } = useContext(AuthContext);
 
     return (
+
         <div>
 
-            <h1>Quid Pro Quo Dashboard</h1>
+            <h1>Dashboard</h1>
 
-            <p>
-                Welcome, {user.email}
-            </p>
-            <button onClick={handleLogout}>
-                Logout
+            <p>Logged in as: {user.email}</p>
+
+            <button onClick={handleTestBackend}>
+                Test Backend
             </button>
+
         </div>
+
     );
+
 };
 
 export default Dashboard;

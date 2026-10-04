@@ -5,7 +5,7 @@ import {
 } from 'firebase/auth';
 
 import { auth } from '../firebase/firebase';
-
+import { authenticatedFetch } from '../api/api';
 
 //=========================Register Component=========================
 
@@ -32,29 +32,26 @@ const Register = () => {
                 password
             );
 
-            const token = await result.user.getIdToken();
+            const response = await authenticatedFetch(
+                
+                result.user,
+                '/users',
+                {
+                    method: 'POST',
 
-            console.log('Token:', token);
-            console.log('Sending request to:', 'http://localhost:3000/users');
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
 
-            const response = await fetch('http://localhost:3000/users', {
+                    body: JSON.stringify({
 
-                method: 'POST',
+                        name: name,
+                        email: result.user.email,
+                        photo: result.user.photoURL || ''
 
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`
-                },
-
-                body: JSON.stringify({
-
-                    name: name,
-                    email: result.user.email,
-                    photo: result.user.photoURL || ''
-
-                })
-
-            });
+                    })
+                }
+            );
 
             if (!response.ok) {
 
