@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 
-import { signInWithEmailAndPassword } from 'firebase/auth';
+import {
+    signInWithEmailAndPassword
+} from 'firebase/auth';
 
 import { auth } from '../firebase/firebase';
 
@@ -25,10 +27,7 @@ const Login = () => {
                 password
             );
 
-            const token = await result.user.getIdToken();
-
-            console.log('Firebase User', result.user);
-            console.log('ID token:', token);
+            console.log('Login successful:', result.user.email);
 
         } catch (error) {
 
@@ -42,6 +41,7 @@ const Login = () => {
         <div>
 
             <h1>Quid Pro Quo</h1>
+
             <h2>Login</h2>
 
             <form onSubmit={handleLogin}>
@@ -82,6 +82,7 @@ const Login = () => {
 
         </div>
     );
+
 };
 
 export default Login;

@@ -1,35 +1,41 @@
-import React, { useContext } from 'react';
-
+import React, {useContext} from 'react';
+import {signOut} from 'firebase/auth';
+import { auth } from '../firebase/firebase';
 import { AuthContext } from '../context/AuthContext';
-
-import { authenticatedFetch } from '../api/api';
 
 //=========================Dashboard Component=========================
 
 const Dashboard = () => {
 
-    const { user } = useContext(AuthContext);
+    const {user,mongoUser,loading} = useContext(AuthContext);
 
-    const handleTestBackend = async () => {
+    //=========================Handle Logout=========================
+
+    const handleLogout = async () => {
 
         try {
 
-            const response = await authenticatedFetch(
-                user,
-                '/protected'
-            );
+            await signOut(auth);
 
-            const data = await response.json();
-
-            console.log('Backend Response:', data);
+            console.log('Logged out successfully');
 
         } catch (error) {
 
-            console.error('Backend request failed:', error);
+            console.error('Logout failed:', error);
 
         }
 
     };
+
+    //=========================Loading=========================
+
+    if (loading) {
+
+        return <p>Loading user...</p>;
+
+    }
+
+    //=========================Dashboard=========================
 
     return (
 
@@ -37,10 +43,34 @@ const Dashboard = () => {
 
             <h1>Dashboard</h1>
 
-            <p>Logged in as: {user.email}</p>
+            <p>
+                Logged in as: {user.email}
+            </p>
 
-            <button onClick={handleTestBackend}>
-                Test Backend
+            <h2>Profile</h2>
+
+            {mongoUser && (
+
+                <div>
+
+                    <p>
+                        <strong>Name:</strong> {mongoUser.name}
+                    </p>
+
+                    <p>
+                        <strong>Email:</strong> {mongoUser.email}
+                    </p>
+
+                    <p>
+                        <strong>Firebase UID:</strong> {mongoUser.firebaseUid}
+                    </p>
+
+                </div>
+
+            )}
+
+            <button onClick={handleLogout}>
+                Logout
             </button>
 
         </div>
