@@ -13,6 +13,7 @@ import Dashboard from '../pages/Dashboard';
 import ErrorPage from '../pages/ErrorPage';
 
 import PrivateRoute from './PrivateRoute';
+import Items from '../pages/Items';
 
 //=========================Routes=========================
 
@@ -50,6 +51,10 @@ const router = createBrowserRouter([
                     {
                         path: 'dashboard',
                         Component: Dashboard
+                    },
+                    {
+                        path: 'items',
+                        Component: Items
                     }
 
                 ]
