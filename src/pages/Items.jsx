@@ -42,6 +42,7 @@ const Items = () => {
     }, [user]);
 
     //=========================Create Item=========================
+
     const handleCreateItem = async (e) => {
         e.preventDefault();
         try {
@@ -66,8 +67,10 @@ const Items = () => {
 
             const newItem = await response.json();
 
-            // Update UI instantly with the new item
-            setItems((prevItems) => [newItem, ...prevItems]);
+            // UI instantly updated with the new item
+            setItems((currentItems) => [
+                ...currentItems,newItem
+            ]);
 
             // Reset form fields
             setName('');
