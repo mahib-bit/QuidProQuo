@@ -14,6 +14,7 @@ import ErrorPage from '../pages/ErrorPage';
 
 import PrivateRoute from './PrivateRoute';
 import Items from '../pages/Items';
+import ItemDetails from '../pages/ItemDetails';
 
 //=========================Routes=========================
 
@@ -56,6 +57,10 @@ const router = createBrowserRouter([
                         path: 'items',
                         Component: Items
                     },
+                    {
+                        path: 'items/:id',
+                        Component: ItemDetails
+                    }
                     
                 ]
 

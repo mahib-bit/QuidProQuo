@@ -1,6 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { AuthContext } from '../context/AuthContext';
 import { authenticatedFetch } from '../api/api';
+import { Link } from 'react-router';
 
 const Items = () => {
     const { user } = useContext(AuthContext);
@@ -13,7 +14,6 @@ const Items = () => {
     const [description, setDescription] = useState('');
     const [condition, setCondition] = useState('Good');
     const [location, setLocation] = useState('');
-    const [estimatedValue, setEstimatedValue] = useState('');
     const [purchaseDate, setPurchaseDate] = useState('');
     const [purchasePrice, setPurchasePrice] = useState('');
     const [notes, setNotes] = useState('');
@@ -142,42 +142,26 @@ const Items = () => {
         }
     };
 
-    //=========================Request Item=========================
-    const handleRequestItem = async (itemId) => {
-        try {
-            const response = await authenticatedFetch(user, '/requests', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ item: itemId })
-            });
-
-            if (!response.ok) {
-                const errorData = await response.json();
-                throw new Error(errorData.message || 'Failed to create request');
-            }
-
-            const request = await response.json();
-            console.log('Request created:', request);
-        } catch (error) {
-            console.error('Failed to create request:', error);
-        }
-    };
-
     //=========================Loading=========================
     if (loading) {
         return <p>Loading items...</p>;
     }
 
+
+
+
     //=========================Items Page=========================
+
+
+
+
     return (
         <div className="flex flex-col items-center justify-center">
             <h1>Items</h1>
 
             {/* Add / Edit Item */}
             <h2>{editingItem ? 'Edit Item' : 'Add Item'}</h2>
-            <form className='border' onSubmit={handleCreateItem}>
+            <form className="card bg-amber-800 shadow-lg" onSubmit={handleCreateItem}>
                 {/* Name */}
                 <div>
                     <label>Name</label>
@@ -300,21 +284,29 @@ const Items = () => {
             <p>Total items: {items.length}</p>
 
             {items.map((item) => (
-                <div className='border' key={item._id}>
-                    <h3>{item.name}</h3>
-                    <p><strong>Category:</strong> {item.category}</p>
-                    <p><strong>Condition:</strong> {item.condition}</p>
-                    <p><strong>Location:</strong> {item.location}</p>
-                    {item.estimatedValue && (
-                        <p><strong>Estimated Value:</strong> ৳{item.estimatedValue}</p>
-                    )}
-                    <p><strong>Status:</strong> {item.status}</p>
-                    <p>{item.description}</p>
+                <div key={item._id} className="card bg-amber-800 shadow-lg">
 
-                    <button className='btn' onClick={() => handleEditItem(item)}>Edit</button>
-                    <button className='btn' onClick={() => handleDeleteItem(item._id)}>Delete</button>
-                    <button className='btn' onClick={() => handleRequestItem(item._id)}>Request</button>
-                    <hr />
+                    {/* Clicking this section opens the details page */}
+                    <Link to={`/items/${item._id}`} className="block">
+                        <div className="card-body">
+                            <h2 className="card-title">{item.name}</h2>
+                            <p>{item.description}</p>
+                            <p>{item.location}</p>
+                        </div>
+                    </Link>
+
+                    {/* These buttons perform their own actions */}
+                    <div className="card-actions p-4">
+                        <button className='btn' onClick={() => handleEditItem(item)}>
+                            Edit
+                        </button>
+
+                        <button className='btn' onClick={() => handleDeleteItem(item._id)}>
+                            Delete
+                        </button>
+
+                    </div>
+
                 </div>
             ))}
         </div>
