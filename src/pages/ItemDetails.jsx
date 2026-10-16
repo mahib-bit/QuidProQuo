@@ -17,6 +17,9 @@ const ItemDetails = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
+  const [proposedStart, setProposedStart] = useState("");
+  const [proposedEnd, setProposedEnd] = useState("");
+
   // -------------------- Fetch Item Details --------------------
   useEffect(() => {
     const fetchItem = async () => {
@@ -49,6 +52,16 @@ const ItemDetails = () => {
       setRequestMessage("");
       setRequestError("");
 
+      if (!proposedStart || !proposedEnd) {
+        setRequestError("Please select both borrowing dates.");
+        return;
+      }
+
+      if (new Date(proposedStart) > new Date(proposedEnd)) {
+        setRequestError("Start date cannot be after end date.");
+        return;
+      }
+
       const response = await authenticatedFetch(user, "/requests", {
         method: "POST",
         headers: {
@@ -56,6 +69,9 @@ const ItemDetails = () => {
         },
         body: JSON.stringify({
           item: item._id,
+          proposedStart,
+          proposedEnd,
+          agreementType: "lending",
         }),
       });
 
@@ -85,9 +101,9 @@ const ItemDetails = () => {
   if (!item) {
     return <p>Item not found.</p>;
   }
-console.log('Firebase UID:', user?.uid);
-console.log('MongoDB User:', mongoUser?._id);
-console.log('Item Owner:', item?.owner);
+  console.log("Firebase UID:", user?.uid);
+  console.log("MongoDB User:", mongoUser?._id);
+  console.log("Item Owner:", item?.owner);
   // -------------------- Item Details UI --------------------
   return (
     <div className="max-w-3xl mx-auto p-6">
@@ -149,7 +165,26 @@ console.log('Item Owner:', item?.owner);
                 ? "Item Unavailable"
                 : "Request to Borrow"}
           </button>
+          <div>
+            <label htmlFor="proposedStart">Borrowing start date</label>
+            <input
+              id="proposedStart"
+              type="date"
+              value={proposedStart}
+              onChange={(e) => setProposedStart(e.target.value)}
+              required
+            />
 
+            <label htmlFor="proposedEnd">Return date</label>
+            <input
+              id="proposedEnd"
+              type="date"
+              value={proposedEnd}
+              onChange={(e) => setProposedEnd(e.target.value)}
+              min={proposedStart || undefined}
+              required
+            />
+          </div>
           {requestMessage && <p className="text-green-600">{requestMessage}</p>}
 
           {requestError && <p className="text-red-600">{requestError}</p>}
