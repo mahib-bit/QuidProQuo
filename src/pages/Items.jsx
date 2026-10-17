@@ -5,9 +5,9 @@ import { Link } from "react-router";
 import MyRequests from "./MyRequests";
 
 const Items = () => {
-  const { user } = useContext(AuthContext);
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
+  const { user, mongoUser } = useContext(AuthContext);
 
   //=========================Form State=========================
   const [name, setName] = useState("");
@@ -33,6 +33,12 @@ const Items = () => {
     setPurchasePrice("");
     setNotes("");
     setEditingItem(null);
+  };
+
+  const isOwner = (item) => {
+    if (!mongoUser) return false;
+    const ownerId = item.owner?._id || item.owner;
+    return ownerId === mongoUser._id;
   };
 
   //=========================Get Items=========================
@@ -164,6 +170,9 @@ const Items = () => {
       </Link>
       <Link to="/incoming-requests">
         <button className="btn bg-amber-600">View Incoming requests</button>
+      </Link>
+      <Link to="/my-agreements">
+        <button className="btn bg-amber-600">View Agreements</button>
       </Link>
 
       {/* Add / Edit Item */}
@@ -305,11 +314,19 @@ const Items = () => {
 
           {/* These buttons perform their own actions */}
           <div className="card-actions p-4">
-            <button className="btn" onClick={() => handleEditItem(item)}>
+            <button
+              className="btn"
+              hidden={!isOwner(item)}
+              onClick={() => handleEditItem(item)}
+            >
               Edit
             </button>
 
-            <button className="btn" onClick={() => handleDeleteItem(item._id)}>
+            <button
+              className="btn"
+              hidden={!isOwner(item)}
+              onClick={() => handleDeleteItem(item._id)}
+            >
               Delete
             </button>
           </div>

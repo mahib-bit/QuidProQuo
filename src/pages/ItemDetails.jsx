@@ -20,6 +20,9 @@ const ItemDetails = () => {
   const [proposedStart, setProposedStart] = useState("");
   const [proposedEnd, setProposedEnd] = useState("");
 
+  // Get today's date formatted as YYYY-MM-DD for input min restrictions
+  const today = new Date().toISOString().split("T")[0];
+
   // -------------------- Fetch Item Details --------------------
   useEffect(() => {
     const fetchItem = async () => {
@@ -153,6 +156,7 @@ const ItemDetails = () => {
             type="date"
             value={proposedStart}
             onChange={(e) => setProposedStart(e.target.value)}
+            min={today}
             required
           />
 
@@ -162,7 +166,7 @@ const ItemDetails = () => {
             type="date"
             value={proposedEnd}
             onChange={(e) => setProposedEnd(e.target.value)}
-            min={proposedStart || undefined}
+            min={proposedStart || today}
             required
           />
         </div>
