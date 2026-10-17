@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { NavLink } from 'react-router';
+import { NavLink, useNavigate } from 'react-router';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { auth } from '../firebase/firebase';
 import { Mail, Lock, LogIn, ArrowRight, ShieldCheck } from 'lucide-react';
@@ -9,6 +9,7 @@ const Login = () => {
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const navigate = useNavigate();
 
     const handleLogin = async (e) => {
         e.preventDefault();
@@ -18,6 +19,8 @@ const Login = () => {
         try {
             const result = await signInWithEmailAndPassword(auth, email, password);
             console.log('Login successful:', result.user.email);
+            // Redirect to the dashboard after a successful login
+            navigate('/dashboard');
         } catch (err) {
             console.error('Login failed:', err);
             setError(err.message.replace('Firebase: ', ''));
