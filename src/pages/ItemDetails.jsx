@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useContext } from "react";
 import { Link, useParams } from "react-router";
-import { authenticatedFetch } from "../api/api";
+import { API_URL, authenticatedFetch } from "../api/api";
 import { AuthContext } from "../context/AuthContext";
 import { 
   ArrowLeft, 
@@ -43,7 +43,7 @@ const ItemDetails = () => {
         setError("");
 
         // Fetch the item
-        const response = await fetch(`http://localhost:3000/items/${id}`);
+        const response = await fetch(`${API_URL}/items/${id}`);
 
         if (!response.ok) {
           throw new Error("Could not load item details.");
